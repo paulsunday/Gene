@@ -1,4 +1,8 @@
-const prompt = require("prompt-sync")({sigint: true});
+const readline = require('readline').createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 // create an array of products
 const products = [
   {
@@ -25,29 +29,29 @@ for (let i = 0; i < products.length; i++) {
 }
 
 // ask the user which product they would like to add to the cart
-console.log("\nEnter the number of the product you would like to add to the cart:");
+readline.question("\nEnter the number of the product you would like to add to the cart:", (productIndex) => {
+  // add the product to the cart
+  shoppingCart.push(products[productIndex - 1]);
 
-// add the product to the cart
-const productIndex = parseInt(prompt()) - 1;
-shoppingCart.push(products[productIndex]);
+  // display the shopping cart
+  console.log("\nSHOPPING CART");
+  for (let i = 0; i < shoppingCart.length; i++) {
+    console.log(`${i + 1}. ${shoppingCart[i].name} - $${shoppingCart[i].price}`);
+  }
 
-// display the shopping cart
-console.log("\nSHOPPING CART");
-for (let i = 0; i < shoppingCart.length; i++) {
-  console.log(`${i + 1}. ${shoppingCart[i].name} - $${shoppingCart[i].price}`);
-}
+  // calculate and display the total price of the items in the shopping cart
+  let totalPrice = 0;
+  for (let i = 0; i < shoppingCart.length; i++) {
+    totalPrice += shoppingCart[i].price;
+  }
+  console.log(`\nTotal: $${totalPrice}`);
 
-// calculate and display the total price of the items in the shopping cart
-let totalPrice = 0;
-for (let i = 0; i < shoppingCart.length; i++) {
-  totalPrice += shoppingCart[i].price;
-}
-console.log(`\nTotal: $${totalPrice}`);
-
-// ask the user if they would like to checkout
-console.log("\nWould you like to checkout? (y/n)");
-
-// if the user chooses to checkout, display a thank you message
-if (prompt().toLowerCase() === "y") {
-  console.log("\nThank you for your purchase!");
-}
+  // ask the user if they would like to checkout
+  readline.question("\nWould you like to checkout? (y/n)", (checkout) => {
+    // if the user chooses to checkout, display a thank you message
+    if (checkout.toLowerCase() === "y") {
+      console.log("\nThank you for your purchase!");
+    }
+    readline.close();
+  });
+});
